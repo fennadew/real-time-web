@@ -1,0 +1,24 @@
+{
+  "name": "real-time-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "echo 'run dev' & npm start",
+    "test": "standard",
+    "nodemon": "nodemon npm start --watch ."
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "mongodb": "^3.0.6",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "0.11.0",
+    "nodemon": "^1.17.3",
+    "socket.io": "^2.1.0",
+    "standard": "^11.0.1"
+  }
+}
