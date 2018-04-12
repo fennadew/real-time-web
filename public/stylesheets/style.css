@@ -61,7 +61,7 @@ fieldset div {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 30%; }
+  margin-top: 120px; }
 
 label, input {
   display: block; }
