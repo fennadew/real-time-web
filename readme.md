@@ -1,11 +1,17 @@
 # Real Time Web course repo
+For this course I created a real time drawing application. To make this happen, I used the html5 <canvas> element, Node, Express, EJS and Socket.io. I did not know how to draw on a canvas element, so I followed a [drawing app tutorial](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/). When it was all there and running I added Socket.io so that it was visible in different browsers.
+
+I ran into the problem that you just could not color at the same time. Therefore, I looked for apps that looked a like and found a [drawing app](http://drawwithme.herokuapp.com/) that helped me with that.
+
+Finally, I added a color picker so you can choose your color yourself
 
 ## Dependencies
-*   [x] Server: Node
-*   [x] Routing: Express
-*   [x] Templating: EJS
-*   [x] CSS: SASS
-*   [x] Real time: Sockets.io
+*   [x] Server: [Node](https://nodejs.org/en/)
+*   [x] Routing: [Express](https://expressjs.com/)
+*   [x] Templating: [EJS](http://ejs.co/)
+*   [x] CSS: [SASS](https://sass-lang.com/)
+*   [x] Monitor: [https://nodemon.io/](https://nodemon.io/)
+*   [x] Real time engine: [Sockets.io](https://socket.io/)
 
 ## Features
 * See what other people are drawing
