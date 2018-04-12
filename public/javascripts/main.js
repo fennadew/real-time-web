@@ -22,22 +22,9 @@ const domElements = {
 
 const socketIo = {
     socket: io(),
-    id: '',
-    computers: [],
     init() {
-        this.socket.on('connect', () => {
-            this.id = this.socket.id;
-            this.socket.emit('id', this.id);
-        });
-        this.socket.on('id', (id) => {
-            this.computers = id;
-        });
         this.socket.on('mouse', function (obj) {
-            saveDraw.clickX.push(obj.x);
-            saveDraw.clickY.push(obj.y);
-            saveDraw.id.push(obj.id);
-            saveDraw.clickDrag.push(obj.dragging)
-            drawEvents.redraw();
+            drawEvents.redraw(obj);
         });
     }
 };
@@ -47,23 +34,38 @@ const socketIo = {
 
 const drawEvents = {
     painting: false,
+    lastEvent: {},
     init() {
         domElements.canvas.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            const mouseX = e.pageX - e.target.offsetLeft;
-            const mouseY = e.pageY - e.target.offsetTop;
-
             this.painting = true;
-            saveDraw.addClick(mouseX, mouseY);
+
+            this.lastEvent.mouseX = e.pageX - e.target.offsetLeft;
+            this.lastEvent.mouseY = e.pageY - e.target.offsetTop;
         });
 
         domElements.canvas.addEventListener('mousemove', (e) => {
             if (this.painting) {
-                const mouseX = e.pageX - e.target.offsetLeft;
-                const mouseY = e.pageY - e.target.offsetTop;
+                const event = {
+                    mouseX: e.pageX - e.target.offsetLeft,
+                    mouseY: e.pageY - e.target.offsetTop
+                };
+                var line = {
+                    start: {x: this.lastEvent.mouseX, y: this.lastEvent.mouseY},
+                    end: {x: event.mouseX, y: event.mouseY},
+                }
+                this.redraw(line);
+                socketIo.socket.emit('mouse', line);
 
-                saveDraw.addClick(mouseX, mouseY, true);
+                this.lastEvent.mouseX = event.mouseX;
+                this.lastEvent.mouseY = event.mouseY;
+
             }
+
+            // this.lastEvent.mouseX = event.mouseX;
+            // this.lastEvent.mouseY = event.mouseY;
+
+
         });
 
         domElements.canvas.addEventListener('mouseup', (e) => {
@@ -74,35 +76,24 @@ const drawEvents = {
             this.painting = false;
         });
     },
-    redraw() {
-        domElements.context.clearRect(0, 0, domElements.context.canvas.width, domElements.context.canvas.height);
+    redraw(obj) {
         domElements.context.lineJoin = "round";
         domElements.context.lineWidth = 5;
 
+        domElements.context.beginPath();
 
-        for (let a = 0; a < socketIo.computers.length; a++) {
-            for (let i = 0; i < saveDraw.clickX.length; i++) {
-                if (socketIo.computers[a] === saveDraw.id[i]) {
-                    domElements.context.beginPath();
+            domElements.context.moveTo(obj.start.x, obj.start.y);
 
-                    if (saveDraw.clickDrag[i] && i) {
-                        domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-                    } else {
-                        domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-                    }
-                    domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
-                    domElements.context.closePath();
-                    domElements.context.stroke();
-                }
-            }
-            // if (saveDraw.clickDrag[i] && i) {
-            //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-            // } else {
-            //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-            // }
-
-        }
+        domElements.context.lineTo(obj.end.x, obj.end.y);
+        domElements.context.closePath();
+        domElements.context.stroke();
     }
+    // if (saveDraw.clickDrag[i] && i) {
+    //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+    // } else {
+    //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+    // }
+
 
 };
 
@@ -111,12 +102,10 @@ const saveDraw = {
     clickX: [],
     clickY: [],
     clickDrag: [],
-    id: [],
     addClick(x, y, dragging) {
         const obj = {
             x: x,
             y: y,
-            id: socketIo.id,
             dragging: dragging
         }
         socketIo.socket.emit('mouse', obj);
