@@ -44,11 +44,23 @@ MongoClient.connect(url, function (err, client) {
     io.on('connection', function (socket) {
         console.log('a user connected');
 
+        socket.on('mouse x', function(x){
+            io.emit('mouse x', x);
+        });
+
+        socket.on('mouse y', function(y){
+            io.emit('mouse y', y);
+        });
+
+        socket.on('mouse dragging', function(dragging){
+            io.emit('mouse dragging', dragging);
+        });
+
         // messagesCollections.find().toArray().then(function (docs) {
         //     socket.emit("chatHistory", docs);
         // });
 
-        socket.on('x', function (x) {
+        // socket.on('x', function (x) {
             // messagesCollections.insertOne({
             //     text: msg
             // }, function (err, res) {
@@ -56,8 +68,8 @@ MongoClient.connect(url, function (err, client) {
             //         console.log(err);
             //     }
             // });
-            socket.emit('x', x);
-        });
+            // io.emit('x', x);
+        // });
         socket.on('disconnect', function () {
             console.log('user disconnected');
         });

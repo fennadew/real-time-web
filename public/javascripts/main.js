@@ -23,17 +23,16 @@ const domElements = {
 const socketIo = {
     socket: io(),
     init() {
-        this.socket.on('chat message', function (msg) {
-            // const item = document.createElement('li');
-            // const text = document.createTextNode(msg);
-            // item.appendChild(text);
-            // document.getElementById('messages').appendChild(item);
+        this.socket.on('mouse x', function(x){
+            saveDraw.clickX.push(x);
+            drawEvents.redraw();
+        });
+        this.socket.on('mouse y', function (y) {
+            saveDraw.clickY.push(y);
         });
 
-        this.socket.on('chatHistory', function(data) {
-            // data.forEach(function(element) {
-            //     console.log(element);
-            // });
+        this.socket.on('mouse dragging', function(dragging) {
+            saveDraw.clickDrag.push(dragging)
         });
     }
 };
@@ -51,7 +50,6 @@ const drawEvents = {
 
             this.painting = true;
             saveDraw.addClick(mouseX, mouseY);
-            this.redraw();
         });
 
         domElements.canvas.addEventListener('mousemove', (e) => {
@@ -60,7 +58,6 @@ const drawEvents = {
                 const mouseY = e.pageY - e.target.offsetTop;
 
                 saveDraw.addClick(mouseX, mouseY, true);
-                this.redraw();
             }
         });
 
@@ -98,11 +95,9 @@ const saveDraw = {
     clickY: [],
     clickDrag: [],
     addClick(x, y, dragging) {
-        this.clickX.push(x);
-        this.clickY.push(y);
-        this.clickDrag.push(dragging)
-        socketIo.socket.emit('chat message', "hallo1", "hallo2");
-
+        socketIo.socket.emit('mouse x', x);
+        socketIo.socket.emit('mouse y', y);
+        socketIo.socket.emit('mouse dragging', dragging);
     },
 }
 
