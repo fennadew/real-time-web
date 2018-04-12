@@ -61,17 +61,15 @@ var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
     console.log('a user connected');
+    console.log(Object.keys(io.engine.clients),
+    Object.keys(io.eio.clients) )
 
-    socket.on('mouse x', function (x) {
-        io.emit('mouse x', x);
+    socket.on('mouse', function (x) {
+        io.emit('mouse', x);
     });
 
-    socket.on('mouse y', function (y) {
-        io.emit('mouse y', y);
-    });
-
-    socket.on('mouse dragging', function (dragging) {
-        io.emit('mouse dragging', dragging);
+    socket.on('id', function (id) {
+        io.emit('id', id);
     });
 
     socket.on('disconnect', function () {

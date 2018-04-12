@@ -22,17 +22,23 @@ const domElements = {
 
 const socketIo = {
     socket: io(),
+    id: '',
+    computers: [],
     init() {
-        this.socket.on('mouse x', function(x){
-            saveDraw.clickX.push(x);
+        this.socket.on('connect', () => {
+            this.id = this.socket.id;
+            this.socket.emit('id', this.id);
+        });
+        this.socket.on('id', (id) => {
+            this.computers.push(id)
+            console.log(this.computers)
+        });
+        this.socket.on('mouse', function (obj) {
+            saveDraw.clickX.push(obj.x);
+            saveDraw.clickY.push(obj.y);
+            saveDraw.id.push(obj.id);
+            saveDraw.clickDrag.push(obj.dragging)
             drawEvents.redraw();
-        });
-        this.socket.on('mouse y', function (y) {
-            saveDraw.clickY.push(y);
-        });
-
-        this.socket.on('mouse dragging', function(dragging) {
-            saveDraw.clickDrag.push(dragging)
         });
     }
 };
@@ -53,7 +59,7 @@ const drawEvents = {
         });
 
         domElements.canvas.addEventListener('mousemove', (e) => {
-            if (this.painting){
+            if (this.painting) {
                 const mouseX = e.pageX - e.target.offsetLeft;
                 const mouseY = e.pageY - e.target.offsetTop;
 
@@ -66,7 +72,7 @@ const drawEvents = {
         });
 
         domElements.canvas.addEventListener('mouseleave', (e) => {
-           this.painting = false;
+            this.painting = false;
         });
     },
     redraw() {
@@ -75,29 +81,51 @@ const drawEvents = {
         domElements.context.lineJoin = "round";
         domElements.context.lineWidth = 5;
 
-        for (let i = 0; i < saveDraw.clickX.length; i++) {
-            domElements.context.beginPath();
-            if (saveDraw.clickDrag[i] && i){
-                domElements.context.moveTo(saveDraw.clickX[i-1], saveDraw.clickY[i-1]);
-            } else {
-                domElements.context.moveTo(saveDraw.clickX[i]-1, saveDraw.clickY[i]);
+
+        for (let a = 0; a < socketIo.computers.length; a++) {
+            for (let i = 0; i < saveDraw.clickX.length; i++) {
+                if(socketIo.computers[a] === saveDraw.id[i]) {
+                    domElements.context.beginPath();
+                    if (saveDraw.clickDrag[i] && i) {
+                        domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+                    } else {
+                        domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+                    }
+                    domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
+                    domElements.context.closePath();
+                    domElements.context.stroke();
+                }
             }
-            domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
-            domElements.context.closePath();
-            domElements.context.stroke();
         }
+        // for (let i = 0; i < saveDraw.clickX.length; i++) {
+        //     domElements.context.beginPath();
+        //     if (saveDraw.clickDrag[i] && i) {
+        //         domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+        //     } else {
+        //         domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+        //     }
+        //     domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
+        //     domElements.context.closePath();
+        //     domElements.context.stroke();
+        // }
     }
 
 };
 
 const saveDraw = {
+    computers: {},
     clickX: [],
     clickY: [],
     clickDrag: [],
+    id: [],
     addClick(x, y, dragging) {
-        socketIo.socket.emit('mouse x', x);
-        socketIo.socket.emit('mouse y', y);
-        socketIo.socket.emit('mouse dragging', dragging);
+        const obj = {
+            x: x,
+            y: y,
+            id: socketIo.id,
+            dragging: dragging
+        }
+        socketIo.socket.emit('mouse', obj);
     },
 }
 
