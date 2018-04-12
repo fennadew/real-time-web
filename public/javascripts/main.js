@@ -9,13 +9,14 @@ const app = {
 const domElements = {
     canvas: document.getElementById('drawing-canvas'),
     context: document.getElementById('drawing-canvas').getContext("2d"),
+    colorPicker: document.getElementById('colorChoice'),
     init() {
-        this.canvas.setAttribute('width', window.innerWidth);
-        this.canvas.setAttribute('height', window.innerHeight);
+        this.canvas.setAttribute('width', window.innerWidth / 2);
+        this.canvas.setAttribute('height', window.innerHeight / 2);
 
         window.addEventListener('resize', () => {
-            this.canvas.setAttribute('width', window.innerWidth);
-            this.canvas.setAttribute('height', window.innerHeight);
+            this.canvas.setAttribute('width', window.innerWidth / 2);
+            this.canvas.setAttribute('height', window.innerHeight / 2);
         });
     }
 };
@@ -23,8 +24,8 @@ const domElements = {
 const socketIo = {
     socket: io(),
     init() {
-        this.socket.on('mouse', function (obj) {
-            drawEvents.redraw(obj);
+        this.socket.on('mouse', function (drawing) {
+            drawEvents.redraw(drawing);
         });
     }
 };
@@ -34,6 +35,7 @@ const socketIo = {
 
 const drawEvents = {
     painting: false,
+    color: domElements.colorPicker.value,
     lastEvent: {},
     init() {
         domElements.canvas.addEventListener('mousedown', (e) => {
@@ -50,21 +52,24 @@ const drawEvents = {
                     mouseX: e.pageX - e.target.offsetLeft,
                     mouseY: e.pageY - e.target.offsetTop
                 };
-                var line = {
-                    start: {x: this.lastEvent.mouseX, y: this.lastEvent.mouseY},
-                    end: {x: event.mouseX, y: event.mouseY},
-                }
-                this.redraw(line);
-                socketIo.socket.emit('mouse', line);
+                const drawing = {
+                    start: {
+                        x: this.lastEvent.mouseX,
+                        y: this.lastEvent.mouseY
+                    },
+                    end: {
+                        x: event.mouseX,
+                        y: event.mouseY
+                    },
+                    color: this.color
+                };
+                this.redraw(drawing);
+                socketIo.socket.emit('mouse', drawing);
 
                 this.lastEvent.mouseX = event.mouseX;
                 this.lastEvent.mouseY = event.mouseY;
 
             }
-
-            // this.lastEvent.mouseX = event.mouseX;
-            // this.lastEvent.mouseY = event.mouseY;
-
 
         });
 
@@ -75,42 +80,26 @@ const drawEvents = {
         domElements.canvas.addEventListener('mouseleave', (e) => {
             this.painting = false;
         });
+
+        domElements.colorPicker.addEventListener('change', (e) => {
+            this.color = domElements.colorPicker.value
+        });
     },
     redraw(obj) {
+        // With help from http://drawwithme.herokuapp.com/ (did the sockets myself! The only thing that didnt work was drawing at the same time. I used this example for fixing it.)
         domElements.context.lineJoin = "round";
+        domElements.context.strokeStyle = this.color;
         domElements.context.lineWidth = 5;
 
         domElements.context.beginPath();
 
-            domElements.context.moveTo(obj.start.x, obj.start.y);
+        domElements.context.moveTo(obj.start.x, obj.start.y);
 
         domElements.context.lineTo(obj.end.x, obj.end.y);
         domElements.context.closePath();
         domElements.context.stroke();
     }
-    // if (saveDraw.clickDrag[i] && i) {
-    //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-    // } else {
-    //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-    // }
-
-
 };
-
-const saveDraw = {
-    computers: {},
-    clickX: [],
-    clickY: [],
-    clickDrag: [],
-    addClick(x, y, dragging) {
-        const obj = {
-            x: x,
-            y: y,
-            dragging: dragging
-        }
-        socketIo.socket.emit('mouse', obj);
-    },
-}
 
 
 app.init();
