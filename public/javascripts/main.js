@@ -31,7 +31,6 @@ const socketIo = {
         });
         this.socket.on('id', (id) => {
             this.computers = id;
-            console.log(this.computers, this.id)
         });
         this.socket.on('mouse', function (obj) {
             saveDraw.clickX.push(obj.x);
@@ -81,26 +80,28 @@ const drawEvents = {
         domElements.context.lineWidth = 5;
 
 
+        for (let a = 0; a < socketIo.computers.length; a++) {
             for (let i = 0; i < saveDraw.clickX.length; i++) {
+                if (socketIo.computers[a] === saveDraw.id[i]) {
                     domElements.context.beginPath();
-                    for (let a = 0; a < socketIo.computers.length; a++) {
-                        if (socketIo.computers[a] === saveDraw.id[i]) {
-                            if (saveDraw.clickDrag[i] && i) {
-                                domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-                            } else {
-                                domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-                            }
-                        }
+
+                    if (saveDraw.clickDrag[i] && i) {
+                        domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+                    } else {
+                        domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
                     }
-                    // if (saveDraw.clickDrag[i] && i) {
-                    //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-                    // } else {
-                    //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-                    // }
                     domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
                     domElements.context.closePath();
                     domElements.context.stroke();
+                }
             }
+            // if (saveDraw.clickDrag[i] && i) {
+            //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+            // } else {
+            //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+            // }
+
+        }
     }
 
 };
