@@ -7,7 +7,7 @@
 const app = require('../app');
 const debug = require('debug')('real-time-web:server');
 const http = require('http');
-const MongoClient = require('mongodb').MongoClient;
+// const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 /**
@@ -29,55 +29,56 @@ var io = require('socket.io')(server);
  */
 
 // Connection URL
-const url = 'mongodb://localhost:27017';
-
-// Database Name
-const dbName = 'real-time-chat';
+// const url = 'mongodb://localhost:27017';
+//
+// // Database Name
+// const dbName = 'real-time-chat';
 
 // Use connect method to connect to the server
-MongoClient.connect(url, function (err, client) {
-    assert.equal(null, err);
-    console.log("Connected successfully to server");
-    const db = client.db(dbName);
-    var messagesCollections = db.collection('messages');
+// MongoClient.connect(url, function (err, client) {
+//     assert.equal(null, err);
+//     console.log("Connected successfully to server");
+//     const db = client.db(dbName);
+//     var messagesCollections = db.collection('messages');
 
-    io.on('connection', function (socket) {
-        console.log('a user connected');
 
-        socket.on('mouse x', function(x){
-            io.emit('mouse x', x);
-        });
+// messagesCollections.find().toArray().then(function (docs) {
+//     socket.emit("chatHistory", docs);
+// });
 
-        socket.on('mouse y', function(y){
-            io.emit('mouse y', y);
-        });
+// socket.on('x', function (x) {
+// messagesCollections.insertOne({
+//     text: msg
+// }, function (err, res) {
+//     if (err) {
+//         console.log(err);
+//     }
+// });
+// io.emit('x', x);
+// });
+//
+// });
 
-        socket.on('mouse dragging', function(dragging){
-            io.emit('mouse dragging', dragging);
-        });
+io.on('connection', function (socket) {
+    console.log('a user connected');
 
-        // messagesCollections.find().toArray().then(function (docs) {
-        //     socket.emit("chatHistory", docs);
-        // });
+    socket.on('mouse x', function (x) {
+        io.emit('mouse x', x);
+    });
 
-        // socket.on('x', function (x) {
-            // messagesCollections.insertOne({
-            //     text: msg
-            // }, function (err, res) {
-            //     if (err) {
-            //         console.log(err);
-            //     }
-            // });
-            // io.emit('x', x);
-        // });
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
+    socket.on('mouse y', function (y) {
+        io.emit('mouse y', y);
+    });
 
+    socket.on('mouse dragging', function (dragging) {
+        io.emit('mouse dragging', dragging);
+    });
+
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
     });
 
 });
-
 
 server.listen(port);
 server.on('error', onError);
