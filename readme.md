@@ -1,6 +1,6 @@
 # Real Time Web course repo
 
-## Go to the branches of week-1, week-2, and week-3 to see the work of that wewk
+### Go to the branches of week-1, week-2, and week-3 to see the work of that week
 
 ## Week 1
 [Slides](https://drive.google.com/open?id=1QxeKsSXnf9poJFWoEe_slHuMb7apB-2eNyUTzi18kcQ)
