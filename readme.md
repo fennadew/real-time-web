@@ -1,5 +1,6 @@
 # Real Time Web course repo
 ![Gif animation of website](https://github.com/fennadew/real-time-web/blob/week-1/public/images/gif.gif)
+
 For this course I created a real time drawing application. To make this happen, I used the html5 <canvas> element, Node, Express, EJS and Socket.io. I did not know how to draw on a canvas element, so I followed a [drawing app tutorial](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/). When it was all there and running I added Socket.io so that it was visible in different browsers.
 
 I ran into the problem that you just could not color at the same time. Therefore, I looked for apps that looked a like and found a [drawing app](http://drawwithme.herokuapp.com/) that helped me with that.
