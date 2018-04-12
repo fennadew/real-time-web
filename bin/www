@@ -61,15 +61,14 @@ var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
     console.log('a user connected');
-    console.log(Object.keys(io.engine.clients),
-    Object.keys(io.eio.clients) )
+    console.log(Object.keys(io.engine.clients))
 
     socket.on('mouse', function (x) {
         io.emit('mouse', x);
     });
 
-    socket.on('id', function (id) {
-        io.emit('id', id);
+    socket.on('mouse', function (id) {
+        io.emit('id', Object.keys(io.engine.clients));
     });
 
     socket.on('disconnect', function () {

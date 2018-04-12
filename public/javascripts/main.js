@@ -30,8 +30,8 @@ const socketIo = {
             this.socket.emit('id', this.id);
         });
         this.socket.on('id', (id) => {
-            this.computers.push(id)
-            console.log(this.computers)
+            this.computers = id;
+            console.log(this.computers, this.id)
         });
         this.socket.on('mouse', function (obj) {
             saveDraw.clickX.push(obj.x);
@@ -77,37 +77,30 @@ const drawEvents = {
     },
     redraw() {
         domElements.context.clearRect(0, 0, domElements.context.canvas.width, domElements.context.canvas.height);
-        domElements.context.strokeStyle = "#df4b26";
         domElements.context.lineJoin = "round";
         domElements.context.lineWidth = 5;
 
 
-        for (let a = 0; a < socketIo.computers.length; a++) {
             for (let i = 0; i < saveDraw.clickX.length; i++) {
-                if(socketIo.computers[a] === saveDraw.id[i]) {
                     domElements.context.beginPath();
-                    if (saveDraw.clickDrag[i] && i) {
-                        domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-                    } else {
-                        domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+                    for (let a = 0; a < socketIo.computers.length; a++) {
+                        if (socketIo.computers[a] === saveDraw.id[i]) {
+                            if (saveDraw.clickDrag[i] && i) {
+                                domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+                            } else {
+                                domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+                            }
+                        }
                     }
+                    // if (saveDraw.clickDrag[i] && i) {
+                    //     domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
+                    // } else {
+                    //     domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
+                    // }
                     domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
                     domElements.context.closePath();
                     domElements.context.stroke();
-                }
             }
-        }
-        // for (let i = 0; i < saveDraw.clickX.length; i++) {
-        //     domElements.context.beginPath();
-        //     if (saveDraw.clickDrag[i] && i) {
-        //         domElements.context.moveTo(saveDraw.clickX[i - 1], saveDraw.clickY[i - 1]);
-        //     } else {
-        //         domElements.context.moveTo(saveDraw.clickX[i] - 1, saveDraw.clickY[i]);
-        //     }
-        //     domElements.context.lineTo(saveDraw.clickX[i], saveDraw.clickY[i]);
-        //     domElements.context.closePath();
-        //     domElements.context.stroke();
-        // }
     }
 
 };
