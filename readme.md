@@ -7,13 +7,13 @@ I ran into the problem that you just could not color at the same time. Therefore
 
 Finally, I added a color picker so you can choose your color yourself
 
-
 # Table of Content
 - [Dependencies](#dependencies)
 - [Features](#features)
-- [Used technology](#used-technology)
-- [Bugs](#bugs)
-- [Todo](#todo)
+- [Get started](#get-started)
+- [Socket.io](#socket)
+- [To do](#to-do)
+- [Resources](#resources)
 
 ## Dependencies
 *   [x] Server: [Node](https://nodejs.org/en/)
@@ -33,6 +33,15 @@ Finally, I added a color picker so you can choose your color yourself
 * `cd` to the repository and run `npm install` to install all dependencies.
 * Run `npm run nodemon` start the server with automatic reload.
 App listens on `http://localhost:3000/`.
+
+## Socket.io
+
+
+## To do
+*   [ ] Better styling
+*   [ ] More functionalities
+*   [ ] Improve perfomance
+*   [ ] Make available for mobile
 
 ## Resources
 * [Tutorial drawing app](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/)
