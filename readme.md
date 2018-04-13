@@ -7,6 +7,14 @@ I ran into the problem that you just could not color at the same time. Therefore
 
 Finally, I added a color picker so you can choose your color yourself
 
+
+# Table of Content
+- [Dependencies](#dependencies)
+- [Features](#features)
+- [Used technology](#used-technology)
+- [Bugs](#bugs)
+- [Todo](#todo)
+
 ## Dependencies
 *   [x] Server: [Node](https://nodejs.org/en/)
 *   [x] Routing: [Express](https://expressjs.com/)
@@ -19,7 +27,6 @@ Finally, I added a color picker so you can choose your color yourself
 * See what other people are drawing
 * Draw at the same time
 * Pick your own color
-
 
 ## Get started
 * Run `$ git clone https://github.com/fennadew/real-time-web.git` in your terminal in the desired directory.
