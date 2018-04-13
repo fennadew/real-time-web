@@ -11,7 +11,7 @@ Finally, I added a color picker so you can choose your color yourself
 - [Dependencies](#dependencies)
 - [Features](#features)
 - [Get started](#get-started)
-- [Socket.io](#socket)
+- [Socket](#socket)
 - [To do](#to-do)
 - [Resources](#resources)
 
@@ -34,8 +34,8 @@ Finally, I added a color picker so you can choose your color yourself
 * Run `npm run nodemon` start the server with automatic reload.
 App listens on `http://localhost:3000/`.
 
-## Socket.io
-
+## Socket.io, Node.js and Express
+Socket.io is a real time engine that ensures that you can see the same information in real time or different browsers, can input and be updated in all browsers. This library works with Node.js and communicates changes to the server. Express is used for routing.
 
 ## To do
 *   [ ] Better styling
