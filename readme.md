@@ -46,3 +46,4 @@ Socket.io is a real time engine that ensures that you can see the same informati
 ## Resources
 * [Tutorial drawing app](http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/)
 * [Drawing app](http://drawwithme.herokuapp.com/)
+
